@@ -2,5 +2,5 @@
 if [ -f /var/www/html/artisan ]; then
     php artisan config:clear
 fi
-
+php composer install
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

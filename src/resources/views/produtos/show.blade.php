@@ -7,13 +7,14 @@
 @section('conteudo')
 <h1 class='mb-4'>Produtos</h1>
 <div class='row g-3'>
-    @forelse ($produtos as $produto)
+    
     <div class='col-md-4'>
         <div class='card h-100 shadow-sm'>
             <div class='card-body'>
                 <h5 class='card-title'>{{ $produto->nome }}</h5>
                 <p class='card-text text-muted'>
                     R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                    TEM QUE INDIREITAR O VER MAIS!!!!
                 </p>
 
             </div>
@@ -40,11 +41,5 @@
 
         </div>
     </div>
-    @empty
-    <div class='col-12'>
-        <div class='alert alert-warning'>
-            Nenhum produto encontrado.
-        </div>
-    </div>
-    @endforelse
+   
 </div>
