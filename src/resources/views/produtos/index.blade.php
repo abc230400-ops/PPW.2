@@ -18,9 +18,9 @@
 
             </div>
             <div class='card-footer'>
-                <a href="/produtos/{{$produto->id}}" class= 'btn btn-primary'>
-                    ver detalhes
-                </a>
+                <button class='btn btn-primary' type='submit'>
+                    Ver detalhes
+                </button>
                 <form action='/produtos/{{$produto->id}}' method='post'>
                     @csrf
                     @method('delete')
@@ -31,7 +31,7 @@
 
                 </form>
 
-                <a href="/produtos/{{$produto->id}}/edit" class= 'btn btn-secondary'>
+                <a href="/produtos/{{$produto->id}}/edit" class= 'btn btn-secondary' type='submit'>
                     editar
                 </a>
                

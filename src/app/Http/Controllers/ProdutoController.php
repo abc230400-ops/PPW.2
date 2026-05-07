@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Produto;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,9 +13,10 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        //$produtos = DB::select('select * from produtos');
-       $produtos = Produto::orderBy('nome')->get();
-        
+        $produtos = DB::select('select * from produtos');
+       
+     
+
         return view("produtos.index", compact('produtos'));
     }
 
@@ -32,28 +33,22 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-    
         $dados = $request->validate([
             'nome' => 'required|min:3',
             'preco' => 'required|numeric|min:0',
         ]);
-
-        Produto::create($dados);
-       // DB::insert('insert into produtos(nome, preco) values (?,?)', [$dados['nome'], $dados['preco']]);
+        DB::insert('insert into produtos(nome, preco) values (?,?)', [$dados['nome'], $dados['preco']]);
         return redirect('/produtos')->with('sucesso', 'algo');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {
-    
-    $produto = Produto::findOrFail($id);
-    return view('produtos.show', compact('produto'));
-    }
+    public function show(string $id) {}
 
-    
-
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(string $id)
     {
         $produto = DB::select('select * from produtos where id = ?', [$id]);
@@ -73,8 +68,8 @@ class ProdutoController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id) {
-       // DB::delete('delete from produtos where id = ?', [$id]);
-        Produto::findOrFail($id)->delete();
+        DB::delete('delete from produtos where id = ?', [$id]);
+
         return redirect('/produtos')->with('sucesso', 'produto excluido');
 
     }
