@@ -51,7 +51,7 @@ COPY src/.env.example .env
 
 # Copia e instala dependências PHP
 RUN composer update --no-interaction \
-    && composer install --no-dev --optimize-autoloader --no-interaction \
+    && composer install --optimize-autoloader --no-interaction \
     && php artisan key:generate \
     && php artisan storage:link
 
