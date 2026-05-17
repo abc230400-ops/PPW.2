@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('diretor', function (Blueprint $table) {
+        Schema::create('filme', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pessoa_id')->constrained();
+            $table->string('nome', 45);
+            $table->integer('duracao');
+            $table->date('data_lancamento');
+            $table->string('classificacao', 45);
+            $table->text('sinopse');    
             $table->timestamps();
         });
     }
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('diretor');
+        Schema::dropIfExists('filme');
     }
 };

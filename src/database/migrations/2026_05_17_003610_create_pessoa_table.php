@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('imagem_pessoa', function (Blueprint $table) {
+        Schema::create('pessoa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('imagem_pessoa_id');
-            $table->foreignId('pessoa_id');
+            $table->string('cpf', 45);
+            $table->string('nome', 45);
+            $table->date("data_nascimento");
+            $table->text('biografia');
+            $table->string('genero', 10);
+            $table->string('nacionalidade', 45);    
             $table->timestamps();
         });
     }
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('imagem_pessoa');
+        Schema::dropIfExists('pessoa');
     }
 };

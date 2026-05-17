@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('email', 45);
             $table->string('nome', 45);
             $table->string('senha', 45);
-            $table->tinyint('admin');
+            $table->tinyInteger('admin');
             $table->timestamps();
         });
     }

@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\FilmeController;
 use App\Http\Controllers\ProdutoController;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +27,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 route::resource('produtos', ProdutoController::class);
-route::resource('filmes', FilmeController::class);
+
+route::resource('filmes', FilmeController::class)
+    ->middleware('auth');
+
+require __DIR__ . '/auth.php';
