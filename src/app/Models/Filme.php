@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Filme extends Model
 {
+protected $table = "filme";
     protected $fillable = [
         'nome',
         'duracao',

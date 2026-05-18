@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Filme;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\StoreFilmeRequest;
 class FilmeController extends Controller
 {
     /**
@@ -12,9 +12,8 @@ class FilmeController extends Controller
      */
     public function index()
     {
-        //$filmes = Filme::all();
-      //  return view('filmes.index', compact('filmes'));
-        return view('filmes.index');
+        $filmes = Filme::orderBy('nome')->paginate(12);
+        return view('filmes.index', compact('filmes'));
     }
 
     /**
@@ -22,15 +21,21 @@ class FilmeController extends Controller
      */
     public function create()
     {
-        //
+        return view('filmes.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreFilmeRequest $request)
     {
-        //
+        
+        $dados = $request->validated();
+
+        Filme::create($dados);
+        
+        return redirect('/filmes')
+            ->with('sucesso', 'Filme cadastrado!');
     }
 
     /**
@@ -38,9 +43,9 @@ class FilmeController extends Controller
      */
     public function show(string $id)
     {
-        $filme = Filme::findOrFail($id);
-        $avaliacoes = $filme->avaliacoes()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
-        return view('filmes.show', compact('filme', 'avaliacoes'));
+        $filmes = Filme::findOrFail($id);
+        $avaliacoes = $filmes->avaliacoes()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
+        return view('filmes.show', compact('filmes', 'avaliacoes'));
     }
 
     /**
