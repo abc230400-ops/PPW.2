@@ -29,7 +29,7 @@ services:
     environment:
       DB_CONNECTION: pgsql
       DB_HOST: postgres
-      DB_PORT: 5433
+      DB_PORT: 5432
       DB_DATABASE: ${DB_DATABASE:-laravel}
       DB_USERNAME: ${DB_USERNAME:-laravel}
       DB_PASSWORD: ${DB_PASSWORD:-secret}

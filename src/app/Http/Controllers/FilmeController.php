@@ -12,7 +12,9 @@ class FilmeController extends Controller
      */
     public function index()
     {
-       return view('filmes.index');
+        //$filmes = Filme::all();
+      //  return view('filmes.index', compact('filmes'));
+        return view('filmes.index');
     }
 
     /**
@@ -36,9 +38,9 @@ class FilmeController extends Controller
      */
     public function show(string $id)
     {
-      $filme = Filme::findOrFail($id);
-      $avaliacoes = $filme->avaliacoes()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
-      return view('filmes.show', compact('filme', 'avaliacoes'));
+        $filme = Filme::findOrFail($id);
+        $avaliacoes = $filme->avaliacoes()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
+        return view('filmes.show', compact('filme', 'avaliacoes'));
     }
 
     /**

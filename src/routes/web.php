@@ -26,9 +26,30 @@ use Illuminate\Support\Facades\Route;
 // return response()->json(['mensagem' => 'Produto deletado com sucesso'], 200);
 // });
 
-route::resource('produtos', ProdutoController::class);
+//route::resource('produtos', ProdutoController::class);
 
-route::resource('filmes', FilmeController::class)
-    ->middleware('auth');
+
+// Grupo de rotas protegidas — só admin
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    Route::resource('filmes', FilmeController::class)
+        ->except(['index', 'show']);
+
+    Route::get('/admin', function () {
+        return view('admin');
+    });
+});
+
+// Rotas públicas — sem middleware
+Route::get('/filmes', [FilmeController::class, 'index']);
+Route::get('/filmes/{id}', [FilmeController::class, 'show']);
+
+
+Route::get('/', function () {
+    return view('home');
+});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 require __DIR__ . '/auth.php';
