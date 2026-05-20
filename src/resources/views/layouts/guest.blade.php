@@ -25,11 +25,12 @@
             <h6 class="text-3xl font-bold text-gray-900 dark:text-white">OtakoFlix</h6>
 
         </div>
-
+        <!--nessa div eu altero a cor do bloco do cadastro e login, no momento esta cinza -->
         <div
             class="w-full sm:max-w-md mt-6 px-6 py-4 bg-gray dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
             {{ $slot }}
         </div>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
