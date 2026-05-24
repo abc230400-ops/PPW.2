@@ -3,31 +3,42 @@
 @section('titulo', 'criando filme')
 
 @section('conteudo')
-    {{-- enctype="multipart/form-data" é obrigatório para upload --}}
     <form action="/filmes" method="POST" enctype="multipart/form-data">
 
         @csrf
         <div class="mb-3">
             <label for="nome" class="form-label">nome</label>
-            <input type="text" class="form-control" id="nome" aria-describedby="nome" name="nome">
-            <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+            <input type="text" class="form-control" id="nome" name="nome">
+            @error('nome') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label for="preco" class="form-label">duração</label>
+            <label for="duracao" class="form-label">duração</label>
             <input type="text" class="form-control" id="duracao" name="duracao">
+            @error('duracao') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label for="preco" class="form-label">data do lançamento</label>
+            <label for="data_lancamento" class="form-label">data do lançamento</label>
             <input type="text" class="form-control" id="data_lancamento" name="data_lancamento">
+            @error('data_lancamento') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label for="preco" class="form-label">classificação</label>
+            <label for="classificacao" class="form-label">classificação</label>
             <input type="text" class="form-control" id="classificacao" name="classificacao">
+            @error('classificacao') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
         <div class="mb-3">
-            <label for="preco" class="form-label">sinopse</label>
+            <label for="sinopse" class="form-label">sinopse</label>
             <input type="text" class="form-control" id="sinopse" name="sinopse">
+            @error('sinopse') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
-        <button type="submit" class="btn btn-primary">criar filme</button>
+
+        {{-- Campo do poster --}}
+        <div class="mb-3">
+            <label for="poster" class="form-label">poster</label>
+            <input type="file" class="form-control" id="poster" name="poster">
+            @error('poster') <div class="text-danger">{{ $message }}</div> @enderror
+        </div>
+
+        <button type="submit" class="btn btn-dark">criar filme</button>
     </form>
 @endsection

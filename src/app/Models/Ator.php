@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ator extends Model
-{
+{ 
+    protected $table = 'ator';
+    
     protected $fillable = [
         'pessoa_id',
     ];

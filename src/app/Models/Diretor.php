@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Diretor extends Model
 {
+    protected $table = 'diretor';
+    
     protected $fillable = [
         'pessoa_id',
     ];

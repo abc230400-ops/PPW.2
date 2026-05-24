@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Imagem extends Model
 {
+    protected $table = 'imagem';
+
     protected $fillable = [
         'caminho',
         'nome',

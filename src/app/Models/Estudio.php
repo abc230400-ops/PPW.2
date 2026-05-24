@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Estudio extends Model
 {
+    protected $table = 'estudio';
+    
     protected $fillable = [
         'nome',
         'local',

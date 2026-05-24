@@ -9,16 +9,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Produtor extends Model
 {
-         protected $fillable = [
+    protected $table = 'produtor';
+
+    protected $fillable = [
         'pessoa_id',
     ];
 
     public function pessoa(): BelongsTo
     {
-        return $this->belongsTo(Pessoa::class); 
+        return $this->belongsTo(Pessoa::class);
     }
 
-    public function filme():BelongsToMany
+    public function filme(): BelongsToMany
     {
         return $this->belongsToMany(Filme::class, 'produtor_filme');
     }

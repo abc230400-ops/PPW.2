@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pessoa extends Model
-{
+{   
+    protected $table = 'pessoa';
+    
     protected $fillable =[
         'cpf',
         'nome',

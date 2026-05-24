@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Filme;
+use App\Models\Imagem;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreFilmeRequest;
+
 class FilmeController extends Controller
 {
     /**
@@ -29,11 +31,24 @@ class FilmeController extends Controller
      */
     public function store(StoreFilmeRequest $request)
     {
-        
         $dados = $request->validated();
 
-        Filme::create($dados);
-        
+        // 1. Salva o arquivo no disco e pega o caminho
+        $caminho = $request->file('poster')->store('posters', 'public');
+
+        // 2. Cria o registro na tabela imagem
+        $imagem = Imagem::create([
+            'caminho' => $caminho,
+            'nome' => $request->file('poster')->getClientOriginalName(),
+        ]);
+
+        // 3. Cria o filme (sem o poster, pois ele não é coluna da tabela filme)
+        unset($dados['poster']);
+        $filme = Filme::create($dados);
+
+        // 4. Liga o filme à imagem na tabela imagem_filme com poster = true
+        $filme->imagem()->attach($imagem->id, ['poster' => true]);
+
         return redirect('/filmes')
             ->with('sucesso', 'Filme cadastrado!');
     }
@@ -43,9 +58,14 @@ class FilmeController extends Controller
      */
     public function show(string $id)
     {
-        $filmes = Filme::findOrFail($id);
-        $avaliacoes = $filmes->avaliacoes()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
-        return view('filmes.show', compact('filmes', 'avaliacoes'));
+
+        $filme = Filme::findOrFail($id);
+        return view('filmes.show', compact('filme'));
+
+
+      /**   $filmes = Filme::findOrFail($id);
+        *$avaliacoes = $filmes->avaliacao()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
+        *return view('filmes.show', compact('filmes', 'avaliacoes'));*/ 
     }
 
     /**
