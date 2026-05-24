@@ -12,9 +12,40 @@ class FilmeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $filmes = Filme::orderBy('nome')->paginate(12);
+
+        $busca = trim($request->input('busca', ''));
+        $ano = $request->input('ano');
+        $ordem = $request->input('ordem', 'nome');
+
+        // Substitui ->get() por ->paginate()
+        // O Laravel lê ?page=N da URL automaticamente
+        $filmes = Filme::orderBy('nome')
+
+            // Busca por título — só aplica se $busca não for vazio
+            ->when(
+                $busca,
+                fn($q) =>
+                $q->where('nome', 'ilike', "%{$busca}%")
+            )
+
+            // Filtro por ano — só aplica se $ano não for nulo
+            ->when(
+                $ano,
+                fn($q) =>
+                $q->where('ano', $ano)
+            )
+            // Ordenação dinâmica
+            ->when(
+                $ordem === 'ano',
+                fn($q) => $q->orderBy('data_lancamento', 'desc'),
+                fn($q) => $q->orderBy('nome')
+            )
+            ->paginate(12)
+            ->withQueryString(); // preserva os filtros nos links de paginação
+
+
         return view('filmes.index', compact('filmes'));
     }
 
@@ -30,7 +61,8 @@ class FilmeController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreFilmeRequest $request)
-    {
+    {   
+        
         $dados = $request->validated();
 
         // 1. Salva o arquivo no disco e pega o caminho
@@ -63,9 +95,9 @@ class FilmeController extends Controller
         return view('filmes.show', compact('filme'));
 
 
-      /**   $filmes = Filme::findOrFail($id);
-        *$avaliacoes = $filmes->avaliacao()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
-        *return view('filmes.show', compact('filmes', 'avaliacoes'));*/ 
+        /**   $filmes = Filme::findOrFail($id);
+         *$avaliacoes = $filmes->avaliacao()->reviews()->with('usuario')->orderBy('created_at', 'desc')->get();
+         *return view('filmes.show', compact('filmes', 'avaliacoes'));*/
     }
 
     /**
