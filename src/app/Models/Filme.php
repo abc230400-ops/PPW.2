@@ -46,7 +46,7 @@ class Filme extends Model
         return $this->belongsToMany(Estudio::class, 'estudio_filme');
     }
 
-    public function imagem(): BelongsToMany
+    public function imagens(): BelongsToMany
     {
         return $this->belongsToMany(Imagem::class, 'imagem_filme');
     }

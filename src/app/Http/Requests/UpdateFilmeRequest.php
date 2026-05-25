@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreFilmeRequest extends FormRequest
+class UpdateFilmeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,9 +28,6 @@ class StoreFilmeRequest extends FormRequest
             'data_lancamento' => 'required|date',
             'classificacao' => 'required|string|max:2000',
             'sinopse' => 'required|string|max:2000',
-            // Valida o array de imagens
-            'imagens' => 'required|array|min:1|max:5',
-            'imagens.*' => 'image|mimes:jpeg,png,webp|max:2048',
 
         ];
     }
@@ -38,16 +35,12 @@ class StoreFilmeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nome.required' => 'O nome do filme é obrigatório.',
-            'duracao.required' => 'A duração é obrigatória.',
+            'nome.required'            => 'O nome do filme é obrigatório.',
+            'duracao.required'         => 'A duração é obrigatória.',
             'data_lancamento.required' => 'A data de lançamento é obrigatória.',
-            'data_lancamento.date' => 'Informe uma data válida.',
-            'classificacao.required' => 'A classificação é obrigatória.',
-            'sinopse.required' => 'A sinopse é obrigatória.',
-            'imagens.required' => 'Envie ao menos uma imagem.',
-            'imagens.max' => 'Máximo de 5 imagens por vez.',
-            'imagens.*.image' => 'Todos os arquivos devem ser imagens.',
-            'imagens.*.max' => 'Cada imagem pode ter no máximo 2 MB.',
+            'data_lancamento.date'     => 'Informe uma data válida.',
+            'classificacao.required'   => 'A classificação é obrigatória.',
+            'sinopse.required'         => 'A sinopse é obrigatória.',
         ];
     }
 }

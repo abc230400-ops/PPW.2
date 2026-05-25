@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateFilmeRequest;
 use App\Models\Filme;
 use App\Models\Imagem;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreFilmeRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class FilmeController extends Controller
 {
@@ -61,28 +64,36 @@ class FilmeController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreFilmeRequest $request)
-    {   
-        
+    {
         $dados = $request->validated();
-
-        // 1. Salva o arquivo no disco e pega o caminho
-        $caminho = $request->file('poster')->store('posters', 'public');
-
-        // 2. Cria o registro na tabela imagem
-        $imagem = Imagem::create([
-            'caminho' => $caminho,
-            'nome' => $request->file('poster')->getClientOriginalName(),
-        ]);
-
-        // 3. Cria o filme (sem o poster, pois ele não é coluna da tabela filme)
-        unset($dados['poster']);
-        $filme = Filme::create($dados);
-
-        // 4. Liga o filme à imagem na tabela imagem_filme com poster = true
-        $filme->imagem()->attach($imagem->id, ['poster' => true]);
-
-        return redirect('/filmes')
-            ->with('sucesso', 'Filme cadastrado!');
+        $posterIndex = $request->input('poster_index', 0);
+        $arquivos = $request->file('imagens', []);
+        $caminhos = [];
+        // Faz upload de todos os arquivos antes da transação
+        foreach ($arquivos as $arquivo) {
+            $caminhos[] = $arquivo->store('imagens', 'public');
+        }
+        try {
+            DB::transaction(function () use ($dados, $caminhos, $posterIndex) {
+                $filme = Filme::create($dados);
+                foreach ($caminhos as $i => $caminho) {
+                    $imagem = Imagem::create([
+                        'caminho' => $caminho,
+                        'nome' => basename($caminho),
+                    ]);
+                    // Associa ao filme com pivot poster
+                    $filme->imagens()->attach($imagem->id, [
+                        'poster' => ($i === (int) $posterIndex),
+                    ]);
+                }
+            });
+        } catch (\Exception $e) {
+            foreach ($caminhos as $caminho) {
+                Storage::disk('public')->delete($caminho);
+            }
+            return back()->with('erro', 'Erro ao salvar. Tente novamente.');
+        }
+        return redirect('/filmes')->with('sucesso', 'Filme cadastrado!');
     }
 
     /**
@@ -105,15 +116,37 @@ class FilmeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        abort_unless(auth()->user()->isAdmin(), 403);
+
+        $filme = Filme::findOrFail($id);
+        return view('filmes.edit', compact('filme'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateFilmeRequest $request, string $id)
     {
-        //
+        abort_unless(auth()->user()->isAdmin(), 403);
+
+        $filme = Filme::findOrFail($id);
+        $dados = $request->validated();
+
+        // Upload de novas imagens (se enviadas)
+        if ($request->hasFile('imagem')) {
+            $arquivos = $request->file('imagem');
+            $posterIndex = $request->input('poster_index', 0);
+            $caminhos = [];
+            foreach ($arquivos as $arquivo) {
+                $caminhos[] = $arquivo->store('imagem', 'public');
+            }
+            foreach ($caminhos as $i => $caminho) {
+                $imagem = Imagem::create(['caminho' => $caminho, 'nome' => basename($caminho)]);
+                $filme->imagens()->attach($imagem->id, ['poster' => ($i === (int) $posterIndex)]);
+            }
+        }
+        $filme->update($dados);
+        return redirect('/filmes/' . $id)->with('sucesso', 'Filme atualizado!');
     }
 
     /**

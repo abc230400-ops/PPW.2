@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FilmeController;
+use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\ProdutoController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,24 +33,22 @@ use Illuminate\Support\Facades\Route;
 // Grupo de rotas protegidas — só admin
 Route::middleware(['auth', 'admin'])->group(function () {
 
-    Route::resource('filmes', FilmeController::class)
-        ->except(['index', 'show']);
+    Route::resource('filmes', FilmeController::class);
+
+    Route::delete(
+        '/imagens/{imagem}/filme/{filme}',
+        [ImagemController::class, 'destroyFromFilme']
+    );
+
 
     Route::get('/admin', function () {
         return view('admin');
     });
 });
 
-// Rotas públicas — sem middleware
-Route::get('/filmes', [FilmeController::class, 'index']);
-Route::get('/filmes/{id}', [FilmeController::class, 'show']);
-
 
 Route::get('/', function () {
     return view('home');
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
 
 require __DIR__ . '/auth.php';

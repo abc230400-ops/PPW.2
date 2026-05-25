@@ -31,7 +31,7 @@
         @forelse ($filmes as $filme)
         <div class="col-md-3">
             <div class="card h-100">  {{-- ← card adicionado --}}
-                @php $poster = $filme->imagem->first(); @endphp
+                @php $poster = $filme->imagens->first(); @endphp
                 @if ($poster)
                 <img src="{{ asset('storage/' . $poster->caminho) }}" class="card-img-top">
                 @endif
@@ -40,6 +40,7 @@
                     <p class="text-muted">{{ $filme->data_lancamento }}</p>
                     <p class="card-text">{{ Str::limit($filme->sinopse, 100) }}</p>
                     <a href="/filmes/{{ $filme->id }}" class="btn btn-dark">Ver detalhes</a>
+                    <a href="/filmes/{{ $filme->id }}/edit" class="btn btn-dark">Editar</a>
                 </div>
             </div>  {{-- ← fecha card --}}
         </div>
