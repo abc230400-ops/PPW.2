@@ -30,6 +30,18 @@
         value="{{ old('sinopse', $filme->sinopse ?? '') }}" class="form-control @error('sinopse') is-invalid @enderror">
     @error('sinopse') <div class="text-danger">{{ $message }}</div> @enderror
 </div>
+
+<div id="generos">
+    <label class="form-label">Gêneros</label>
+    @foreach ($generos as $genero)
+    <div class="form-check">
+        <input type="checkbox" name="generos[]" value="{{ $genero->id }}"
+            class="form-check-input">
+        <label class="form-check-label">{{ $genero->nome }}</label>
+    </div>
+    @endforeach
+</div>
+
 {{-- Container que recebe os novos campos --}}
 <div id="campos-imagem">
     <div class="campo-imagem mb-2 d-flex align-items-center gap-2">
@@ -38,7 +50,7 @@
             <input type="checkbox" name="poster_index" value="0"> Poster
         </label>
     </div>
-    {{-- aqui amostra as imagens que tem dentro de cada filme --}}
+    <!-- {{-- aqui amostra as imagens que tem dentro de cada filme --}}
       {{-- vai ajeitar na semana que vem com ajax --}}
     @if (isset($filme) && $filme->imagens->isNotEmpty())
         <div class="mb-4">
@@ -66,7 +78,7 @@
                 @endforeach
             </div>
         </div>
-    @endif
+    @endif -->
 </div>
 <button type="button" id="btn-adicionar" class="btn btn-outline-secondary">
     + Adicionar imagem
@@ -74,23 +86,23 @@
 
 
 @foreach ($errors->all() as $erro)
-    <li>{{ $erro }}</li>
+<li>{{ $erro }}</li>
 @endforeach
 
 @push('scripts')
-    <script>
-        const container = document.getElementById('campos-imagem');
-        const btnAdicionar = document.getElementById('btn-adicionar');
-        let indice = 1;
-        const MAX_FOTOS = 5;
-        btnAdicionar.addEventListener('click', () => {
-            //if (indice >= MAX_FOTOS) {
-            //  alert('Máximo de ' + MAX_FOTOS + ' imagens.');
-            // return;
-            //}
-            const div = document.createElement('div');
-            div.className = 'campo-imagem mb-2 d-flex align-items-center gap-2';
-            div.innerHTML = `
+<script>
+    const container = document.getElementById('campos-imagem');
+    const btnAdicionar = document.getElementById('btn-adicionar');
+    let indice = 1;
+    const MAX_FOTOS = 5;
+    btnAdicionar.addEventListener('click', () => {
+        //if (indice >= MAX_FOTOS) {
+        //  alert('Máximo de ' + MAX_FOTOS + ' imagens.');
+        // return;
+        //}
+        const div = document.createElement('div');
+        div.className = 'campo-imagem mb-2 d-flex align-items-center gap-2';
+        div.innerHTML = `
                     <input type="file" name="imagens[]" class="form-control"
                     accept="image/jpeg,image/png,image/webp">
                     <label class="mb-0">
@@ -98,10 +110,10 @@
                     </label>
                     <button type="button" class="btn btn-sm btn-outline-danger"
                     onclick="this.closest('.campo-imagem').remove()">✕</button>`;
-            container.appendChild(div);
-            indice++;
-        });
-    </script>
+        container.appendChild(div);
+        indice++;
+    });
+</script>
 @endpush
 
 

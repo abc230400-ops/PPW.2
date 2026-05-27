@@ -22,12 +22,22 @@ class UpdateFilmeRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        $id = $this->route('filme');
+
         return [
             'nome' => 'required|string|min:2|max:255',
             'duracao' => 'required|string|min:1',
             'data_lancamento' => 'required|date',
             'classificacao' => 'required|string|max:2000',
             'sinopse' => 'required|string|max:2000',
+            // Novas imagens — opcionais no update
+            'imagens' => 'sometimes|nullable|array|max:5',
+            'imagens.*' => 'image|mimes:jpeg,png,webp|max:2048',
+            // Índice do poster entre as novas imagens enviadas
+            'poster_index' => 'nullable|integer|min:0',
+            // ID de imagem existente para definir como poster
+            'poster_imagem_id' => 'nullable|integer',
 
         ];
     }

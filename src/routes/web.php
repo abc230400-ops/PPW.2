@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FilmeController;
+use App\Http\Controllers\GeneroController;
 use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\ProdutoController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('filmes', FilmeController::class);
+
+    Route::resource('generos', GeneroController::class);
 
     Route::delete(
         '/imagens/{imagem}/filme/{filme}',

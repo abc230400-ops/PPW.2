@@ -14,6 +14,9 @@
                     <a class="nav-link" href="/filmes">Filmes</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/generos">Gêneros</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#">Celebridades</a>
                 </li>
             </ul>
