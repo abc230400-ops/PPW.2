@@ -47,9 +47,10 @@
 
                 </div>
             </div>
-            {{-- esse onclick faz voce voltar pra janela anterior (bizu dmss) --}}
-            <button class="btn btn-dark mb-3" onclick="window.history.back()">Voltar</button>
-
+           
+            <button class="btn btn-dark mb-3 mt-3">
+                    <a href="/filmes" class="text-white text-decoration-none">Voltar</a>
+                </button>
 
 
         </div>

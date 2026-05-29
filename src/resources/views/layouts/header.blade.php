@@ -11,13 +11,13 @@
                     <a class="nav-link" href="/">Início</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/filmes">Filmes</a>
+                    <a class="nav-link" href="/filmes">Filmes / Animes </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/generos">Gêneros</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Celebridades</a>
+                    <a class="nav-link" href="/pessoas">Celebridades</a>
                 </li>
             </ul>
 

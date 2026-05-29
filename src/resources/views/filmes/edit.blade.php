@@ -23,7 +23,7 @@
                     @csrf
                     @method('PUT')
                     @include('partials.form-filmes', ['filme' => $filme])
-                    <button type="submit" class="btn btn-dark">Atualizar</button>
+                    <button type="submit" class="btn btn-dark mb-5">Atualizar</button>
                 </form>
 
             </div>

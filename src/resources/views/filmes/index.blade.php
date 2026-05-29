@@ -56,7 +56,7 @@
                     <p class="card-text">{{ Str::limit($filme->sinopse, 100) }}</p>
 
                     {{-- ← empurra os botões pro fundo com o mt-auto --}}
-                    <div class="mt-auto"> 
+                    <div class="mt-auto">
                         <a href="/filmes/{{ $filme->id }}" class="btn btn-dark">Ver detalhes</a>
                         <a href="/filmes/{{ $filme->id }}/edit" class="btn btn-dark">Editar</a>
                     </div>
@@ -82,5 +82,12 @@
         Exibindo {{ $filmes->firstItem() }}–{{ $filmes->lastItem() }}
         de {{ $filmes->total() }} filmes
     </p>
+
+    <div class="d-flex justify-content-center">
+        <a href="/" class="btn btn-dark mb-3">
+            Voltar
+        </a>
+    </div>
+
 </div>
 @endsection

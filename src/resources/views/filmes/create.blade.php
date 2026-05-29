@@ -16,7 +16,9 @@
             <form action="/filmes" method="POST" enctype="multipart/form-data">
                 @csrf
                 @include('partials.form-filmes')
-                <button type="submit" class="btn btn-dark">criar filme</button>
+                <div class="mb-3 mt-4">
+                    <button type="submit" class="btn btn-dark">criar filme</button>            
+                </div>
             </form>
 
         </div>

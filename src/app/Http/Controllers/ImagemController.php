@@ -11,9 +11,9 @@ class ImagemController extends Controller
 {
     public function destroyFromFilme(Imagem $imagem, Filme $filme)
     {
-    dd('aa');
+   
         $filme->imagens()->detach($imagem->id);
-        $usos = $imagem->filmes()->count() + $imagem->pessoas()->count();
+        $usos = $imagem->filmes()->count() + $imagem->pessoa()->count();
         if ($usos === 0) {
             Storage::disk('public')->delete($imagem->caminho);
             $imagem->delete();

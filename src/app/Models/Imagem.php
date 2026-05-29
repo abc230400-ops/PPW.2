@@ -16,7 +16,7 @@ class Imagem extends Model
 
     public function pessoa():BelongsToMany
     {
-        return $this->belongsToMany(Pessoa::class,  'pessoa_imagem');
+        return $this->belongsToMany(Pessoa::class,  'imagem_pessoa');
     }
 
     public function estudio():BelongsToMany
@@ -24,7 +24,7 @@ class Imagem extends Model
         return $this->belongsToMany(Estudio::class, 'estudio_imagem');
     }
 
-    public function filme():BelongsToMany
+    public function filmes():BelongsToMany
     {
         return $this->belongsToMany(Filme::class, 'imagem_filme');
     }
