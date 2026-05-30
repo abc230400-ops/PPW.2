@@ -41,6 +41,7 @@
                             <p><strong>Lançamento:</strong> {{ $filme->data_lancamento }}</p>
                             <p><strong>Classificação:</strong> {{ $filme->classificacao }}</p>
                             <p><strong>Sinopse:</strong> {{ $filme->sinopse }}</p>
+                            <p><strong>Estúdio:</strong> {{ $filme->estudio->first()->nome ?? 'Não informado' }}</p>
                         </div>
 
                     </div>

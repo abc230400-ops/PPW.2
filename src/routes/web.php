@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EstudioController;
 use App\Http\Controllers\FilmeController;
 use App\Http\Controllers\GeneroController;
 use App\Http\Controllers\ImagemController;
@@ -41,11 +42,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('pessoas', PessoaController::class);
 
+    Route::resource('estudios', EstudioController::class);
+
     Route::delete(
         '/imagens/{imagem}/filme/{filme}',
         [ImagemController::class, 'destroyFromFilme']
     );
-
 
     Route::get('/admin', function () {
         return view('admin');

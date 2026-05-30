@@ -7,6 +7,7 @@ use App\Models\Filme;
 use App\Models\Imagem;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreFilmeRequest;
+use App\Models\Estudio;
 use App\Models\Genero;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -67,7 +68,8 @@ class FilmeController extends Controller
     public function create()
     {
         $generos = Genero::all();
-        return view('filmes.create', compact('generos'));
+        $estudios = Estudio::all();
+        return view('filmes.create', compact('generos', 'estudios'));
     }
 
     /**
@@ -133,7 +135,8 @@ class FilmeController extends Controller
 
         $filme = Filme::findOrFail($id);
         $generos = Genero::all();
-        return view('filmes.edit', compact('filme', 'generos'));
+        $estudios = Estudio::all();
+        return view('filmes.edit', compact('filme', 'generos', 'estudios'));
     }
 
     /**
@@ -146,7 +149,7 @@ class FilmeController extends Controller
         $filme->update($request->validated());
 
         $filme->genero()->sync($request->input('generos', [])); // ← aqui
-
+        $filme->estudio()->sync($request->input('estudios', []));
         // 1. Atualiza qual imagem é o poster
         if ($request->filled('poster_imagem_id')) {
             // Desmarca todos os posters do filme

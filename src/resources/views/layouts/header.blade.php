@@ -14,9 +14,6 @@
                     <a class="nav-link" href="/filmes">Filmes / Animes </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/generos">Gêneros</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/pessoas">Celebridades</a>
                 </li>
             </ul>

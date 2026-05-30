@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePessoaRequest;
 use App\Models\Ator;
 use App\Models\Diretor;
 use App\Models\Escritor;
+use App\Models\Imagem;
 use App\Models\Pessoa;
 use App\Models\Produtor;
 use Illuminate\Http\Request;
@@ -37,6 +38,17 @@ class PessoaController extends Controller
     {
         $dados = $request->validated();
         $pessoa = Pessoa::create($dados);
+
+        if ($request->hasFile('imagem')) {
+            $caminho = $request->file('imagem')->store('imagens', 'public');
+            $imagem = Imagem::create([
+                'caminho' => $caminho,
+                'nome' => basename($caminho)
+                /* basename é uma função nativa do PHP que retorna o nome do arquivo de um caminho */
+            ]);
+            $pessoa->imagem()->attach($imagem->id);
+        }
+
         /**
          * esse $tipos é so uma variavel que armazana os tipos de pessoa que o usuario selecionou no formulario,
          *  e depois a gente verifica se cada tipo foi selecionado e cria o registro correspondente na tabela relacionada
@@ -89,6 +101,20 @@ class PessoaController extends Controller
         $pessoa = Pessoa::findOrFail($id);
         $dados = $request->validated();
         $pessoa->update($dados);
+
+        // Remove a imagem antiga se existir
+        $pessoa->imagem()->detach();
+        
+        //campo pra salvar a imagem
+        if ($request->hasFile('imagem')) {
+            $caminho = $request->file('imagem')->store('imagens', 'public');
+            $imagem = Imagem::create([
+                'caminho' => $caminho,
+                'nome' => basename($caminho)
+            ]);
+            //adiciona a nova imagem
+            $pessoa->imagem()->attach($imagem->id);
+        }
 
         // Remove os tipos antigos
         $pessoa->ator()->delete();

@@ -12,36 +12,43 @@
 
         <div class="row g-2 justify-content-center">
             @forelse ($pessoas as $pessoa)
-            <div class="col-md-3">
-                <div class="card h-100"> {{-- ← card adicionado --}}
+            <div class="card mb-3">
+                <div class="d-flex align-items-center p-3 gap-3">
 
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bold">{{ $pessoa->nome }}</h5>
-
-                        <p class="card-text ">
-                            <strong>Tipo(s): </strong>
-                            @php $tipos = []; @endphp
-                            @if ($pessoa->ator) @php $tipos[] = 'Ator/Dublador(a)'; @endphp @endif
-                            @if ($pessoa->diretor) @php $tipos[] = 'Diretor(a)'; @endphp @endif
-                            @if ($pessoa->escritor) @php $tipos[] = 'Escritor(a)'; @endphp @endif
-                            @if ($pessoa->produtor) @php $tipos[] = 'Produtor(a)'; @endphp @endif
-                            {{ implode(', ', $tipos) }}
-                        </p>
-
-                        <strong class="card-text">Biografia: </strong>
-                        <p class="card-text">{{ Str::limit($pessoa->biografia, 100) }}</p>
-                        <p class="card-text"><small class="text-muted">Nascido em {{ $pessoa->data_nascimento}}</small></p>
-
-                        {{-- ← empurra os botões pro fundo com o mt-auto --}}
-                        <div class="mt-auto">
-                            <a href="/pessoas/{{ $pessoa->id }}" class="btn btn-dark">Ver detalhes</a>
-                            <a href="/pessoas/{{ $pessoa->id }}/edit" class="btn btn-dark">Editar</a>
-                        </div>
-
+                    {{-- Foto redonda --}}
+                    @php $foto = $pessoa->imagem->first(); @endphp
+                    @if ($foto)
+                    <img src="{{ asset('storage/' . $foto->caminho) }}"
+                        class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                    @else
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="bi bi-person-fill" style="font-size: 24px; color: white;"></i>
                     </div>
-                </div> {{-- ← fecha card --}}
-            </div>
+                    @endif
 
+                    {{-- Informações --}}
+                    <div class="flex-grow-1">
+                        <h5 class="mb-0">{{ $pessoa->nome }}</h5>
+                        <small class="text-muted">
+                            @php $tipos = [];
+                            if ($pessoa->ator) $tipos[] = 'Ator/Dublador';
+                            if ($pessoa->diretor) $tipos[] = 'Diretor';
+                            if ($pessoa->escritor) $tipos[] = 'Escritor';
+                            if ($pessoa->produtor) $tipos[] = 'Produtor';
+                            @endphp
+                            {{ implode(', ', $tipos) }}
+                        </small>
+                    </div>
+
+                    {{-- Botões à direita --}}
+                    <div class="d-flex gap-2">
+                        <a href="/pessoas/{{ $pessoa->id }}" class="btn btn-dark btn-sm">Ver</a>
+                        <a href="/pessoas/{{ $pessoa->id }}/edit" class="btn btn-dark btn-sm">Editar</a>
+                    </div>
+
+                </div>
+            </div>
             @empty
             <p>Nenhuma pessoa cadastrada.</p>
             @endforelse
@@ -55,12 +62,3 @@
     </div>
 </div>
 @endsection
-
-
-
-{{-- @php $poster = $pessoa->imagens->first(); @endphp --}}
-{{-- @if ($poster) --}}
-{{-- <img src="{{ asset('storage/' . $poster->caminho) }}" class="card-img-top"> --}}
-{{-- @else --}}
-{{-- <img src="{{ asset('storage/default-poster.jpg') }}" class="card-img-top"> --}}
-{{-- @endif --}}

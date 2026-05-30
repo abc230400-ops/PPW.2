@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('titulo', 'Gêneros')
+@section('titulo', 'Estúdios')
 
 @section('conteudo')
 <div class="container mt-4">
@@ -8,21 +8,21 @@
             <div class="col-md-6">
 
 
-                <h1>Gêneros</h1>
+                <h1>Estúdios</h1>
 
 
-                @forelse ($generos as $genero)
+                @forelse ($estudios as $estudio)
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $genero->nome }}</h5>
+                        <h5 class="card-title">{{ $estudio->nome }}</h5>
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="/generos/{{ $genero->id }}" class="btn btn-dark">Ver todos os filmes de {{ $genero->nome }}</a>
-                            <a href="/generos/{{ $genero->id }}/edit" class="btn btn-dark">Editar</a>
+                            <a href="/estudios/{{ $estudio->id }}" class="btn btn-dark">Ver estudios</a>
+                            <a href="/estudios/{{ $estudio->id }}/edit" class="btn btn-dark">Editar</a>
                         </div>
                     </div>
                 </div>
                 @empty
-                <p>Nenhum gênero cadastrado.</p>
+                <p>Nenhum estúdio cadastrado.</p>
                 @endforelse
              
                 <button class="btn btn-dark mb-3 ">

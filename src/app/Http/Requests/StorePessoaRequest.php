@@ -21,13 +21,25 @@ class StorePessoaRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'cpf.required' => 'O CPF é obrigatório.',
-            'cpf.unique'   => 'Esse CPF já está cadastrado.',
-            'nome.required' => 'O nome é obrigatório.',
-            'data_nascimento.required' => 'A data de nascimento é obrigatória.',
-            'data_nascimento.date' => 'Informe uma data válida.',
-        ];
-    }
+{
+    return [
+        'cpf'             => 'required|unique:pessoa,cpf',
+        'nome'            => 'required',
+        'data_nascimento' => 'required|date',
+        'biografia'       => 'nullable',
+        'genero'          => 'nullable',
+        'nacionalidade'   => 'nullable',
+    ];
+}
+
+public function messages(): array
+{
+    return [
+        'cpf.required'             => 'O CPF é obrigatório.',
+        'cpf.unique'               => 'Esse CPF já está cadastrado.',
+        'nome.required'            => 'O nome é obrigatório.',
+        'data_nascimento.required' => 'A data de nascimento é obrigatória.',
+        'data_nascimento.date'     => 'Informe uma data válida.',
+    ];
+}
 }

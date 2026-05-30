@@ -31,17 +31,33 @@
     @error('sinopse') <div class="text-danger">{{ $message }}</div> @enderror
 </div>
 
-<div id="generos">
+<div id="generos" class="mb-3">
     <label class="form-label">Gêneros</label>
-    @foreach ($generos as $genero)
-    <div class="form-check">
-        <input type="checkbox" name="generos[]" value="{{ $genero->id }}"
-        {{ ($filme->genero ?? collect())->contains($genero->id) ? 'checked' : '' }}
-            class="form-check-input">
-        <label class="form-check-label">{{ $genero->nome }}</label>
+    <div class="d-flex flex-wrap gap-3">
+        @foreach ($generos as $genero)
+        <div class="form-check">
+            <input type="checkbox" name="generos[]" value="{{ $genero->id }}"
+                {{ ($filme->genero ?? collect())->contains($genero->id) ? 'checked' : '' }}
+                class="form-check-input">
+            <label class="form-check-label">{{ $genero->nome }}</label>
+        </div>
+        @endforeach
     </div>
-    @endforeach
 </div>
+<div id="estudios" class="mb-3">
+    <label class="form-label">Estúdios</label>
+    <div class="d-flex flex-wrap gap-3">
+        @foreach ($estudios as $estudio)
+        <div class="form-check">
+            <input type="checkbox" name="estudios[]" value="{{ $estudio->id }}"
+                {{ ($filme->estudio ?? collect())->contains($estudio->id) ? 'checked' : '' }}
+                class="form-check-input">
+            <label class="form-check-label">{{ $estudio->nome }}</label>
+        </div>
+        @endforeach
+    </div>
+</div>
+
 
 {{-- Container que recebe os novos campos --}}
 <div id="campos-imagem">
@@ -52,22 +68,22 @@
         </label>
     </div>
     {{-- aqui amostra as imagens que tem dentro de cada filme --}}
-      {{-- vai ajeitar na semana que vem com ajax --}}
+    {{-- vai ajeitar na semana que vem com ajax --}}
     @if (isset($filme) && $filme->imagens->isNotEmpty())
-        <div class="mb-4">
-            <label class="form-label fw-bold">Imagens cadastradas</label>
-            <div class="d-flex flex-wrap gap-3">
-                @foreach ($filme->imagens as $imagem)
-                    <div class="text-center" style="width: 130px">
-                        <img src="{{ asset('storage/' . $imagem->caminho) }}" class="img-thumbnail mb-1"
-                            style="height: 90px; object-fit: cover">
-                        {{-- Radio para definir como poster --}}
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="poster_imagem_id" value="{{ $imagem->id }}" {{ $imagem->pivot->poster ? 'checked' : '' }}>
-                            <label class="form-check-label small">Poster</label>
-                        </div>
-                        {{-- Botão de remoção individual --}}
-                        <!-- <form action="/imagens/{{ $imagem->id }}/filme/{{ $filme->id }}" method="POST" class="mt-1"
+    <div class="mb-4">
+        <label class="form-label fw-bold">Imagens cadastradas</label>
+        <div class="d-flex flex-wrap gap-3">
+            @foreach ($filme->imagens as $imagem)
+            <div class="text-center" style="width: 130px">
+                <img src="{{ asset('storage/' . $imagem->caminho) }}" class="img-thumbnail mb-1"
+                    style="height: 90px; object-fit: cover">
+                {{-- Radio para definir como poster --}}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="poster_imagem_id" value="{{ $imagem->id }}" {{ $imagem->pivot->poster ? 'checked' : '' }}>
+                    <label class="form-check-label small">Poster</label>
+                </div>
+                {{-- Botão de remoção individual --}}
+                <!-- <form action="/imagens/{{ $imagem->id }}/filme/{{ $filme->id }}" method="POST" class="mt-1"
                             onsubmit="return confirm('Remover esta imagem?')">
                             @csrf
                             @method('DELETE')
@@ -75,10 +91,10 @@
                                 Remover
                             </button>
                         </form> -->
-                    </div>
-                @endforeach
             </div>
+            @endforeach
         </div>
+    </div>
     @endif
 </div>
 <button type="button" id="btn-adicionar" class="btn btn-outline-secondary mb-5">
