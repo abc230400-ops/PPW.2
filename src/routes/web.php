@@ -3,6 +3,7 @@
 use App\Http\Controllers\EstudioController;
 use App\Http\Controllers\FilmeController;
 use App\Http\Controllers\GeneroController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProdutoController;
@@ -60,10 +61,7 @@ Route::get('/filmes/{filme}', [FilmeController::class, 'show']);
 Route::get('/pessoas', [PessoaController::class, 'index']);
 Route::get('/pessoas/{pessoa}', [PessoaController::class, 'show']);
 
-// rota de busca geral (filmes, pessoas, etc) que esta no header
-Route::get('/buscar_tudo', [HomeController::class, 'buscar']);
 
-
-Route::get('/', function () {return view('home');});
+Route::get('/', [HomeController::class, 'index']);
 
 require __DIR__ . '/auth.php';

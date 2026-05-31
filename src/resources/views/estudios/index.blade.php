@@ -24,10 +24,11 @@
                 @empty
                 <p>Nenhum estúdio cadastrado.</p>
                 @endforelse
-             
-                <button class="btn btn-dark mb-3 ">
-                    <a href="/" class="text-white text-decoration-none">Voltar</a>
-                </button>
+
+                <div class="d-flex gap-2 mb-3">
+                    <a href="/estudios/create" class="btn btn-dark">Adicionar Estúdio</a>
+                    <a href="/" class="btn btn-dark">Voltar</a>
+                </div>
             </div>
 
         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEstudioRequest;
 use App\Http\Requests\UpdateEstudioRequest;
 use App\Models\Estudio;
+use App\Models\Imagem;
 use Illuminate\Http\Request;
 
 class EstudioController extends Controller
@@ -32,7 +33,19 @@ class EstudioController extends Controller
     public function store(StoreEstudioRequest $request)
     {
         $dados = $request->validated();
-        Estudio::create($dados);
+        $estudio = Estudio::create($dados);
+
+        //campo pra salvar a imagem
+        if ($request->hasFile('imagem')) {
+            $caminho = $request->file('imagem')->store('imagens', 'public');
+            $imagem = Imagem::create([
+                'caminho' => $caminho,
+                'nome' => basename($caminho)
+            ]);
+            //adiciona a nova imagem
+            $estudio->imagem()->attach($imagem->id);
+        }
+
         return redirect('/estudios')->with('success', 'Estúdio criado com sucesso!');
     }
 
@@ -66,6 +79,18 @@ class EstudioController extends Controller
         $estudio = Estudio::findOrfail($id);
         $dados = $request->validated();
         $estudio->update($dados);
+
+        $estudio->imagem()->detach();
+        //campo pra salvar a imagem
+        if ($request->hasFile('imagem')) {
+            $caminho = $request->file('imagem')->store('imagens', 'public');
+            $imagem = Imagem::create([
+                'caminho' => $caminho,
+                'nome' => basename($caminho)
+            ]);
+            //adiciona a nova imagem
+            $estudio->imagem()->attach($imagem->id);
+        }
         return redirect('/estudios')->with('success', 'Estúdio atualizado com sucesso!');
     }
 

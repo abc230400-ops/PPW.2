@@ -18,6 +18,9 @@
                 @method('PUT')
                 @include('partials.form-estudios')
                 <button type="submit" class="btn btn-dark">Alterar estúdio</button>
+                <button class="btn btn-dark ">
+                    <a href="/estudios" class="text-white text-decoration-none">Voltar</a>
+                </button>
             </form>
 
         </div>

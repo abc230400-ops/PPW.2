@@ -16,7 +16,7 @@ class Estudio extends Model
 
     public function imagem():BelongsToMany
     {
-        return $this->belongsToMany(Imagem::class, 'estudio_imagem');
+        return $this->belongsToMany(Imagem::class, 'imagem_estudio');
     }
 
     public function filme():BelongsToMany

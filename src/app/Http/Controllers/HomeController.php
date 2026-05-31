@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estudio;
+use App\Models\Filme;
+use App\Models\Pessoa;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,11 +15,16 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $busca = trim($request->input('busca_tudo', ''));
-        $filme = request()->input('filme');
-        $pessoa = request()->input('pessoa');   
-        $estudio = request()->input('estudio');
-       // $genero = request()->input('genero');
 
+        $filmes = Filme::orderBy('nome')
+        ->when($busca, fn($q) => $q->where('nome', 'ilike', "%{$busca}%"))->get();
+
+        $pessoas = Pessoa::orderBy('nome')
+        ->when($busca, fn($q) => $q->where('nome', 'ilike', "%{$busca}%"))->get();
+
+        $estudios = Estudio::orderBy('nome')
+        ->when($busca, fn($q) => $q->where('nome', 'ilike', "%{$busca}%"))->get();
+        
+        return view('home', compact('filmes', 'pessoas', 'estudios'));
     }
-
 }

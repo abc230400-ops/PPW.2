@@ -19,12 +19,12 @@
             </ul>
 
             <!-- Busca central -->
-            <form action="/buscar_tudo" method="GET" class="mb-4">
-                <div class="d-flex mx-auto w-50" role="search">
-                    <input class="form-control me-2" type="search" name="busca_tudo" 
+            <form action="/" method="GET" class="d-flex flex-grow-1" style="margin: 0 80px;">
+
+                <input class="form-control me-2" type="search" name="busca_tudo"
                     placeholder="Buscar por..." value="{{ request('busca_tudo') }}" />
-                    <button class="btn btn-outline-light" type="submit">Buscar</button>
-                </div>
+                <button class="btn btn-outline-light" type="submit">Buscar</button>
+
             </form>
 
             <!-- Dropdown direita -->
@@ -47,7 +47,11 @@
                                 @csrf
                                 <button type="submit" class="dropdown-item">Sair</button>
                             </form>
-
+                            @if(auth()->user()->isAdmin())
+                            <a href="/admin" class="dropdown-item">Administração</a>
+                            <a href="/generos" class="dropdown-item">Gêneros</a>
+                            <a href="/estudios" class="dropdown-item">Estúdios</a>
+                            @endif
                         </li>
                         @else
                         <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
