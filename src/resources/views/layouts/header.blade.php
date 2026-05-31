@@ -19,26 +19,35 @@
             </ul>
 
             <!-- Busca central -->
-            <form class="d-flex mx-auto w-50" role="search">
-                <input class="form-control me-2" type="search" placeholder="Buscar filme..." />
-                <button class="btn btn-outline-light" type="submit">Buscar</button>
+            <form action="/buscar_tudo" method="GET" class="mb-4">
+                <div class="d-flex mx-auto w-50" role="search">
+                    <input class="form-control me-2" type="search" name="busca_tudo" 
+                    placeholder="Buscar por..." value="{{ request('busca_tudo') }}" />
+                    <button class="btn btn-outline-light" type="submit">Buscar</button>
+                </div>
             </form>
 
             <!-- Dropdown direita -->
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown">
                     <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown">
-                        🍥 Conta
+                        @auth
+                        Olá, {{ Auth::user()->name }}
+                        @else
+                        <i class="bi bi-person-fill" style="color: white;"></i> acesse sua conta
+
+                        @endauth
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                        
+
                         @auth
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="dropdown-item">Sair</button>
                             </form>
+
                         </li>
                         @else
                         <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>

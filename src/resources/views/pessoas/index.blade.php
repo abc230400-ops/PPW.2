@@ -43,8 +43,10 @@
 
                     {{-- Botões à direita --}}
                     <div class="d-flex gap-2">
-                        <a href="/pessoas/{{ $pessoa->id }}" class="btn btn-dark btn-sm">Ver</a>
-                        <a href="/pessoas/{{ $pessoa->id }}/edit" class="btn btn-dark btn-sm">Editar</a>
+                        <a href="/pessoas/{{ $pessoa->id }}" class="btn btn-dark btn-md"><i class="bi bi-plus-lg"></i></i></a>
+                        @if(auth()->user()?->isAdmin())
+                        <a href="/pessoas/{{ $pessoa->id }}/edit" class="btn btn-dark">Editar</a>
+                        @endif
                     </div>
 
                 </div>

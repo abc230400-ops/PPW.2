@@ -58,7 +58,9 @@
                     {{-- ← empurra os botões pro fundo com o mt-auto --}}
                     <div class="mt-auto">
                         <a href="/filmes/{{ $filme->id }}" class="btn btn-dark">Ver detalhes</a>
+                        @if(auth()->user()?->isAdmin())
                         <a href="/filmes/{{ $filme->id }}/edit" class="btn btn-dark">Editar</a>
+                        @endif
                     </div>
 
                 </div>
