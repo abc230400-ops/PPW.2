@@ -31,6 +31,10 @@ class StoreFilmeRequest extends FormRequest
             // Valida o array de imagens
             'imagens' => 'required|array|min:1|max:5',
             'imagens.*' => 'image|mimes:jpeg,png,webp|max:2048',
+            'vinculos' => 'nullable|array',
+            'vinculos.*.pessoa_id' => 'required_with:vinculos|integer|exists:pessoa,id',
+            'vinculos.*.tipo' => 'required_with:vinculos|in:ator,diretor,produtor,escritor',
+            'vinculos.*.papel' => 'nullable|max:100',
 
         ];
     }

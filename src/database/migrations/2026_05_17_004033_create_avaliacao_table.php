@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('avaliacao', function (Blueprint $table) {
             $table->id();
             $table->foreignId('filme_id');
-            $table->foreignId('usuario_id');
+            $table->foreignId('user_id');
             $table->integer('nota');
             $table->text('descricao');
             $table->timestamps();

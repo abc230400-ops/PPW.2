@@ -6,7 +6,7 @@ use App\Http\Controllers\GeneroController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\PessoaController;
-use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\AvaliacaoController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/produtos', [ProdutoController::class,'index']);
@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Route;
 // Grupo de rotas protegidas — só admin
 Route::middleware(['auth', 'admin'])->group(function () {
 
+    Route::get('/pessoas/buscar', [PessoaController::class, 'buscar']);
+    
     Route::resource('filmes', FilmeController::class);
 
     Route::resource('generos', GeneroController::class);
@@ -44,6 +46,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('pessoas', PessoaController::class);
 
     Route::resource('estudios', EstudioController::class);
+
+
 
     Route::delete(
         '/imagens/{imagem}/filme/{filme}',
@@ -54,14 +58,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return view('admin');
     });
 });
- //teve que criar as rotas a parte pq tava dando erro, com elas separadas usuarios comuns conseguem acessar a rota show, 
- //mas não conseguem acessar as rotas de edição, criação e exclusão, que estão protegidas pelo middleware admin. 
+//teve que criar as rotas a parte pq tava dando erro, com elas separadas usuarios comuns conseguem acessar a rota show, 
+//mas não conseguem acessar as rotas de edição, criação e exclusão, que estão protegidas pelo middleware admin. 
 Route::get('/filmes', [FilmeController::class, 'index']);
 Route::get('/filmes/{filme}', [FilmeController::class, 'show']);
 Route::get('/pessoas', [PessoaController::class, 'index']);
 Route::get('/pessoas/{pessoa}', [PessoaController::class, 'show']);
 
+Route::get('/filmes/{id}/avaliacoes', [AvaliacaoController::class, 'index']);
+
+Route::get('/filmes-p/{id}', [FilmeController::class, 'indexPublic']);
+
 
 Route::get('/', [HomeController::class, 'index']);
+
+Route::get('/home', [HomeController::class, 'index']);
 
 require __DIR__ . '/auth.php';

@@ -17,6 +17,14 @@ class FilmeController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function indexPublic(string $id)
+    {
+
+        $filme = Filme::findOrFail($id);
+        return view('filmes.show-public', compact('filme'));
+    }
+
     public function index(Request $request)
     {
 
@@ -78,8 +86,10 @@ class FilmeController extends Controller
     public function store(StoreFilmeRequest $request)
     {
         $dados = $request->validated();
+
         $posterIndex = $request->input('poster_index', 0);
         $arquivos = $request->file('imagens', []);
+        $vinculos = $request->input('vinculos', []);
         $caminhos = [];
         // Faz upload de todos os arquivos antes da transação
         foreach ($arquivos as $arquivo) {
@@ -87,9 +97,10 @@ class FilmeController extends Controller
         }
         $generosSelecionados = $request->input('generos', []);
         try {
-            DB::transaction(function () use ($dados, $caminhos, $posterIndex, $generosSelecionados) {
+            DB::transaction(function () use ($dados, $caminhos, $posterIndex, $generosSelecionados, $vinculos) {
                 $filme = Filme::create($dados);
                 $filme->genero()->sync($generosSelecionados); // ← vincula os gêneros
+                $this->sincronizarVinculos($filme, $vinculos);
 
                 foreach ($caminhos as $i => $caminho) {
                     $imagem = Imagem::create([
@@ -109,6 +120,25 @@ class FilmeController extends Controller
             return back()->with('erro', 'Erro ao salvar. Tente novamente.');
         }
         return redirect('/filmes')->with('sucesso', 'Filme cadastrado!');
+    }
+    private function sincronizarVinculos(Filme $filme, array $vinculos): void
+    {
+        foreach ($vinculos as $v) {
+            $pessoaId = $v['pessoa_id'] ?? null;
+            $tipo = $v['tipo'] ?? null;
+            $personagem = $v['papel'] ?? 'sem papel';
+            if (!$pessoaId || !$tipo)
+                continue;
+            match ($tipo) {
+                'ator' => $filme->ator()->syncWithoutDetaching([
+                    $pessoaId => ['papel' => $personagem]
+                ]),
+                'diretor' => $filme->diretor()->syncWithoutDetaching([$pessoaId]),
+                'produtor' => $filme->produtor()->syncWithoutDetaching([$pessoaId]),
+                'escritor' => $filme->escritor()->syncWithoutDetaching([$pessoaId]),
+                default => null,
+            };
+        }
     }
 
     /**
@@ -133,7 +163,13 @@ class FilmeController extends Controller
     {
         abort_unless(auth()->user()->isAdmin(), 403);
 
-        $filme = Filme::findOrFail($id);
+         $filme = Filme::with([
+        'ator.pessoa',
+        'escritor.pessoa',
+        'diretor.pessoa',
+        'produtor.pessoa',
+
+        ]) -> findOrFail($id);
         $generos = Genero::all();
         $estudios = Estudio::all();
         return view('filmes.edit', compact('filme', 'generos', 'estudios'));
@@ -147,6 +183,21 @@ class FilmeController extends Controller
         abort_unless(auth()->user()->isAdmin(), 403);
         $filme = Filme::findOrFail($id);
         $filme->update($request->validated());
+
+        // 1. Remover vínculos marcados
+        foreach ($request->input('remover_vinculos', []) as $relacao => $ids) {
+            if (in_array($relacao, ['ator', 'diretor', 'produtor', 'escritor'])) {
+                $filme->$relacao()->detach($ids);
+            }
+        }
+        // 2. Atualizar personagem dos atores existentes
+        foreach ($request->input('atores_existentes', []) as $atorId => $dados) {
+            $filme->ator()->updateExistingPivot($atorId, [
+                'papel' => $dados['papel'] ?? 'sem papel'
+            ]);
+        }
+        // 3. Adicionar novos vínculos (mesmo método do store)
+        $this->sincronizarVinculos($filme, $request->input('vinculos', []));
 
         $filme->genero()->sync($request->input('generos', [])); // ← aqui
         $filme->estudio()->sync($request->input('estudios', []));

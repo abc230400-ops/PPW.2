@@ -18,7 +18,7 @@ class Diretor extends Model
     {
         return $this->belongsTo(Pessoa::class); 
     }
-    public function filme():BelongsToMany
+    public function filmes():BelongsToMany
     {
         return $this->belongsToMany(Filme::class, 'diretor_filme');
     }

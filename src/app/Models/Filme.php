@@ -19,7 +19,7 @@ class Filme extends Model
     ];
     public function ator(): BelongsToMany
     {
-        return $this->belongsToMany(Ator::class, 'ator_filme');
+        return $this->belongsToMany(Ator::class, 'ator_filme')->withPivot('papel');
     }
 
     public function diretor(): BelongsToMany
