@@ -163,13 +163,13 @@ class FilmeController extends Controller
     {
         abort_unless(auth()->user()->isAdmin(), 403);
 
-         $filme = Filme::with([
-        'ator.pessoa',
-        'escritor.pessoa',
-        'diretor.pessoa',
-        'produtor.pessoa',
+        $filme = Filme::with([
+            'ator.pessoa',
+            'escritor.pessoa',
+            'diretor.pessoa',
+            'produtor.pessoa',
 
-        ]) -> findOrFail($id);
+        ])->findOrFail($id);
         $generos = Genero::all();
         $estudios = Estudio::all();
         return view('filmes.edit', compact('filme', 'generos', 'estudios'));
@@ -231,6 +231,8 @@ class FilmeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $filme = Filme::findOrFail($id);
+        $filme->delete();
+        return response()->json(['mensagem' => 'Filme excluído com sucesso']);
     }
 }

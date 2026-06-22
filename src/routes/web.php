@@ -72,6 +72,6 @@ Route::get('/filmes-p/{id}', [FilmeController::class, 'indexPublic']);
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/home', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 require __DIR__ . '/auth.php';
