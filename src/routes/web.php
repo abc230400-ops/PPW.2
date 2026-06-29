@@ -38,12 +38,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/pessoas/buscar', [PessoaController::class, 'buscar']);
-    
-    Route::resource('filmes', FilmeController::class);
+
+    Route::get('/filmes/buscar', [FilmeController::class, 'buscar']);
+
+    // index e show ficam fora do resource, porque são públicos e pra evitar codigo repetido ai utilizou o except 
+    //que exclui as rotas index e show do resource e o usuario comum nao consegue acessar o create, edit, update e delete
+    Route::resource('filmes', FilmeController::class)->except(['index', 'show']);
 
     Route::resource('generos', GeneroController::class);
 
-    Route::resource('pessoas', PessoaController::class);
+    // index e show ficam fora do resource, porque são públicos
+    Route::resource('pessoas', PessoaController::class)->except(['index', 'show']);
 
     Route::resource('estudios', EstudioController::class);
 
@@ -58,8 +63,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return view('admin');
     });
 });
-//teve que criar as rotas a parte pq tava dando erro, com elas separadas usuarios comuns conseguem acessar a rota show, 
-//mas não conseguem acessar as rotas de edição, criação e exclusão, que estão protegidas pelo middleware admin. 
+
+// Rotas públicas de Filmes e Pessoas (index e show)
 Route::get('/filmes', [FilmeController::class, 'index']);
 Route::get('/filmes/{filme}', [FilmeController::class, 'show']);
 Route::get('/pessoas', [PessoaController::class, 'index']);

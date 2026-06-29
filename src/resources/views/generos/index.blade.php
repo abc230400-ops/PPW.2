@@ -17,14 +17,15 @@
                         <h5 class="card-title">{{ $genero->nome }}</h5>
                         <div class="d-flex justify-content-end gap-2">
                             <a href="/generos/{{ $genero->id }}" class="btn btn-dark">Ver todos os filmes de {{ $genero->nome }}</a>
-                            <a href="/generos/{{ $genero->id }}/edit" class="btn btn-dark">Editar</a>
+                            
+                            <a href="/generos/{{ $genero->id }}/edit" class="btn btn-dark">Editar gênero</a>
                         </div>
                     </div>
                 </div>
                 @empty
                 <p>Nenhum gênero cadastrado.</p>
                 @endforelse
-             
+                <a href="/generos/create" class="btn btn-dark">Adicionar gênero</a>
                 <button class="btn btn-dark mb-3 ">
                     <a href="/" class="text-white text-decoration-none">Voltar</a>
                 </button>

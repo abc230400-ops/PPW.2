@@ -46,6 +46,11 @@
                         <a href="/pessoas/{{ $pessoa->id }}" class="btn btn-dark btn-md"><i class="bi bi-plus-lg"></i></i></a>
                         @if(auth()->user()?->isAdmin())
                         <a href="/pessoas/{{ $pessoa->id }}/edit" class="btn btn-dark">Editar</a>
+                        <form action="/pessoas/{{ $pessoa->id }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir esta pessoa?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-secondary">Excluir</button>
+                        </form>
                         @endif
                     </div>
 
@@ -55,12 +60,13 @@
             <p>Nenhuma pessoa cadastrada.</p>
             @endforelse
 
-            <div class="mb-3 mt-3">
-                <button class="btn btn-dark mb-3 ">
-                    <a href="/" class="text-white text-decoration-none">Voltar</a>
-                </button>
+            <div class="d-flex mb-3 mt-3 gap-3">
+                <a href="/" class="btn btn-dark mb-3">
+                    Voltar
+                </a>
+                <a href="/pessoas/create" class="btn btn-dark mb-3">
+                    Criar pessoa
+                </a>
             </div>
         </div>
-    </div>
-</div>
-@endsection
+        @endsection

@@ -7,8 +7,12 @@ use App\Models\Filme;
 use App\Models\Imagem;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreFilmeRequest;
+use App\Models\Ator;
+use App\Models\Diretor;
+use App\Models\Escritor;
 use App\Models\Estudio;
 use App\Models\Genero;
+use App\Models\Produtor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -121,6 +125,9 @@ class FilmeController extends Controller
         }
         return redirect('/filmes')->with('sucesso', 'Filme cadastrado!');
     }
+    /**
+     * Display the specified resource.
+     */
     private function sincronizarVinculos(Filme $filme, array $vinculos): void
     {
         foreach ($vinculos as $v) {
@@ -131,11 +138,17 @@ class FilmeController extends Controller
                 continue;
             match ($tipo) {
                 'ator' => $filme->ator()->syncWithoutDetaching([
-                    $pessoaId => ['papel' => $personagem]
+                    Ator::firstOrCreate(['pessoa_id' => $pessoaId])->id => ['papel' => $personagem]
                 ]),
-                'diretor' => $filme->diretor()->syncWithoutDetaching([$pessoaId]),
-                'produtor' => $filme->produtor()->syncWithoutDetaching([$pessoaId]),
-                'escritor' => $filme->escritor()->syncWithoutDetaching([$pessoaId]),
+                'diretor' => $filme->diretor()->syncWithoutDetaching([
+                    Diretor::firstOrCreate(['pessoa_id' => $pessoaId])->id
+                ]),
+                'produtor' => $filme->produtor()->syncWithoutDetaching([
+                    Produtor::firstOrCreate(['pessoa_id' => $pessoaId])->id
+                ]),
+                'escritor' => $filme->escritor()->syncWithoutDetaching([
+                    Escritor::firstOrCreate(['pessoa_id' => $pessoaId])->id
+                ]),
                 default => null,
             };
         }
@@ -147,7 +160,17 @@ class FilmeController extends Controller
     public function show(string $id)
     {
 
-        $filme = Filme::findOrFail($id);
+        $filme = Filme::with([
+            'ator.pessoa',
+            'escritor.pessoa',
+            'diretor.pessoa',
+            'produtor.pessoa',
+            'imagens',
+            'genero',
+            'estudio',
+
+        ])->findOrFail($id);
+
         return view('filmes.show', compact('filme'));
 
 
@@ -201,6 +224,7 @@ class FilmeController extends Controller
 
         $filme->genero()->sync($request->input('generos', [])); // ← aqui
         $filme->estudio()->sync($request->input('estudios', []));
+
         // 1. Atualiza qual imagem é o poster
         if ($request->filled('poster_imagem_id')) {
             // Desmarca todos os posters do filme
@@ -233,6 +257,26 @@ class FilmeController extends Controller
     {
         $filme = Filme::findOrFail($id);
         $filme->delete();
-        return response()->json(['mensagem' => 'Filme excluído com sucesso']);
+        return redirect('/filmes')->with('sucesso', 'Filme excluído com sucesso!');
+    }
+
+    public function buscar(Request $request)
+    {
+        $termo = trim($request->input('q', ''));
+
+        if (strlen($termo) < 2) {
+            return response()->json([]);
+        }
+
+        $filmes = Filme::where('nome', 'ilike', "%{$termo}%")
+            ->limit(8)
+            ->get(['id', 'nome']);
+
+        return response()->json($filmes->map(function ($f) {
+            return [
+                'id' => $f->id,
+                'nome' => $f->nome,
+            ];
+        }));
     }
 }

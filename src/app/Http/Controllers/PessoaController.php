@@ -36,15 +36,16 @@ class PessoaController extends Controller
      */
     public function store(StorePessoaRequest $request)
     {
+
         $dados = $request->validated();
+        $fotos = $request->file('imagens', []);
         $pessoa = Pessoa::create($dados);
 
-        if ($request->hasFile('imagem')) {
-            $caminho = $request->file('imagem')->store('imagens', 'public');
+        foreach ($fotos as $foto) {
+            $caminho = $foto->store('imagens', 'public');
             $imagem = Imagem::create([
                 'caminho' => $caminho,
                 'nome' => basename($caminho)
-                /* basename é uma função nativa do PHP que retorna o nome do arquivo de um caminho */
             ]);
             $pessoa->imagem()->attach($imagem->id);
         }
@@ -65,6 +66,26 @@ class PessoaController extends Controller
         }
         if (in_array('escritor', $tipos)) {
             Escritor::create(['pessoa_id' => $pessoa->id]);
+        }
+        $filmesVinculados = $request->input('filmes_vinculados', []);
+        foreach ($filmesVinculados as $v) {
+            $filmeId = $v['filme_id'] ?? null;
+            $tipo = $v['tipo'] ?? null;
+            $personagem = $v['papel'] ?? 'sem papel';
+
+            if (!$filmeId || !$tipo) continue;
+
+            match ($tipo) {
+                'ator' => Ator::firstOrCreate(['pessoa_id' => $pessoa->id])
+                    ->filmes()->syncWithoutDetaching([$filmeId => ['papel' => $personagem]]),
+                'diretor' => Diretor::firstOrCreate(['pessoa_id' => $pessoa->id])
+                    ->filmes()->syncWithoutDetaching([$filmeId]),
+                'produtor' => Produtor::firstOrCreate(['pessoa_id' => $pessoa->id])
+                    ->filmes()->syncWithoutDetaching([$filmeId]),
+                'escritor' => Escritor::firstOrCreate(['pessoa_id' => $pessoa->id])
+                    ->filmes()->syncWithoutDetaching([$filmeId]),
+                default => null,
+            };
         }
 
         return redirect('/pessoas')->with('success', 'Pessoa criada com sucesso!');
@@ -102,40 +123,50 @@ class PessoaController extends Controller
         $dados = $request->validated();
         $pessoa->update($dados);
 
-        // Remove a imagem antiga se existir
-        $pessoa->imagem()->detach();
-
         //campo pra salvar a imagem
-        if ($request->hasFile('imagem')) {
-            $caminho = $request->file('imagem')->store('imagens', 'public');
-            $imagem = Imagem::create([
-                'caminho' => $caminho,
-                'nome' => basename($caminho)
-            ]);
-            //adiciona a nova imagem
-            $pessoa->imagem()->attach($imagem->id);
-        }
+        // Só substitui as fotos se o usuário enviou arquivos novos
+        if ($request->hasFile('imagens')) {
+            // Remove as fotos antigas, já que vamos adicionar novas
+            $pessoa->imagem()->detach();
 
-        // Remove os tipos antigos
-        $pessoa->ator()->delete();
-        $pessoa->diretor()->delete();
-        $pessoa->produtor()->delete();
-        $pessoa->escritor()->delete();
+            foreach ($request->file('imagens') as $foto) {
+                $caminho = $foto->store('imagens', 'public');
+                $imagem = Imagem::create([
+                    'caminho' => $caminho,
+                    'nome' => basename($caminho)
+                ]);
+                $pessoa->imagem()->attach($imagem->id);
+            }
+        }
 
         // Adiciona os novos tipos selecionados
+        // Tipos que devem permanecer ou ser criados
         $tipos = $request->input('tipos', []);
+
         if (in_array('ator', $tipos)) {
-            Ator::create(['pessoa_id' => $pessoa->id]);
+            Ator::firstOrCreate(['pessoa_id' => $pessoa->id]);
+        } else {
+            $pessoa->ator()->delete();
         }
+
         if (in_array('diretor', $tipos)) {
-            Diretor::create(['pessoa_id' => $pessoa->id]);
+            Diretor::firstOrCreate(['pessoa_id' => $pessoa->id]);
+        } else {
+            $pessoa->diretor()->delete();
         }
+
         if (in_array('produtor', $tipos)) {
-            Produtor::create(['pessoa_id' => $pessoa->id]);
+            Produtor::firstOrCreate(['pessoa_id' => $pessoa->id]);
+        } else {
+            $pessoa->produtor()->delete();
         }
+
         if (in_array('escritor', $tipos)) {
-            Escritor::create(['pessoa_id' => $pessoa->id]);
+            Escritor::firstOrCreate(['pessoa_id' => $pessoa->id]);
+        } else {
+            $pessoa->escritor()->delete();
         }
+
         return redirect('/pessoas')->with('success', 'Pessoa atualizada com sucesso!');
     }
 
@@ -144,7 +175,13 @@ class PessoaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pessoa = Pessoa::findOrFail($id);
+        $pessoa->ator()->delete();
+        $pessoa->diretor()->delete();
+        $pessoa->produtor()->delete();
+        $pessoa->escritor()->delete();
+        $pessoa->delete();
+        return redirect('/pessoas')->with('success', 'Pessoa excluída com sucesso!');
     }
 
     public function buscar(Request $request)

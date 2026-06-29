@@ -48,7 +48,7 @@ class Filme extends Model
 
     public function imagens(): BelongsToMany
     {
-        return $this->belongsToMany(Imagem::class, 'imagem_filme');
+        return $this->belongsToMany(Imagem::class, 'imagem_filme')->withPivot('poster');
     }
 
     public function avaliacao(): HasMany
