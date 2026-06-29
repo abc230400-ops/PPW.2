@@ -12,7 +12,7 @@
 </div>
 <div class="mb-3">
     <label for="data_lancamento" class="form-label">data do lançamento</label>
-    <input type="text" class="form-control" id="data_lancamento" name="data_lancamento"
+    <input type="date" class="form-control" id="data_lancamento" name="data_lancamento"
         value="{{ old('data_lancamento', $filme->data_lancamento ?? '') }}"
         class="form-control @error('data_lancamento') is-invalid @enderror">
     @error('data_lancamento') <div class="text-danger">{{ $message }}</div> @enderror

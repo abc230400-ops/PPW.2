@@ -118,6 +118,7 @@ class FilmeController extends Controller
                 }
             });
         } catch (\Exception $e) {
+            dd($e->getMessage());
             foreach ($caminhos as $caminho) {
                 Storage::disk('public')->delete($caminho);
             }

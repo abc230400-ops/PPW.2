@@ -93,9 +93,11 @@
         <a href="/" class="btn btn-dark mb-3">
             Voltar
         </a>
+        @if(auth()->user()?->isAdmin())
         <a href="/filmes/create" class="btn btn-dark mb-3">
             Criar filme
         </a>
+        @endif
     </div>
 
 </div>
